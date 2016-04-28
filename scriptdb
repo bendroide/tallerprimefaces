@@ -1,0 +1,39 @@
+CREATE SEQUENCE person_id_seq;
+
+CREATE TABLE person (
+                person_id INTEGER NOT NULL DEFAULT nextval('person_id_seq'),
+                dpi VARCHAR(25) NOT NULL,
+                name VARCHAR(50) NOT NULL,
+                last_name VARCHAR(60) NOT NULL,
+                telephone VARCHAR(50) NOT NULL,
+                enabled BOOLEAN NOT NULL,
+                CONSTRAINT person_pk PRIMARY KEY (person_id)
+);
+
+
+ALTER SEQUENCE person_id_seq OWNED BY person.person_id;
+
+CREATE UNIQUE INDEX person_dpi_uk
+ ON person
+ ( dpi );
+
+CREATE TABLE car (
+                car_id INTEGER NOT NULL,
+                license_plate VARCHAR(10) NOT NULL,
+                model VARCHAR(50) NOT NULL,
+                model_year INTEGER NOT NULL,
+                person_id INTEGER NOT NULL,
+                CONSTRAINT car_pk PRIMARY KEY (car_id)
+);
+
+
+CREATE UNIQUE INDEX car_license_plate_uk
+ ON car
+ ( license_plate );
+
+ALTER TABLE car ADD CONSTRAINT person_car_fk
+FOREIGN KEY (person_id)
+REFERENCES person (person_id)
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+NOT DEFERRABLE;
